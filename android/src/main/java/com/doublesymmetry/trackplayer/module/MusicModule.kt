@@ -229,10 +229,18 @@ class MusicModule(reactContext: ReactApplicationContext) : ReactContextBaseJavaM
         playerOptions = bundledData
 
 
-        LocalBroadcastManager.getInstance(context).registerReceiver(
-            MusicEvents(context),
-            IntentFilter(EVENT_INTENT)
-        )
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
+            LocalBroadcastManager.getInstance(context).registerReceiver(
+                MusicEvents(context),
+                IntentFilter(EVENT_INTENT),
+                Context.RECEIVER_NOT_EXPORTED
+            )
+        } else {
+            LocalBroadcastManager.getInstance(context).registerReceiver(
+                MusicEvents(context),
+                IntentFilter(EVENT_INTENT)
+            )
+        }
 
         Intent(context, MusicService::class.java).also { intent ->
             if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
